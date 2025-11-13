@@ -1,4 +1,4 @@
-name: BiGR
+name: bitmark_bigr
 channels:
   - pytorch
   - nvidia
