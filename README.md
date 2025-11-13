@@ -43,15 +43,19 @@ python tools/comprehensive_infer.py --model_path "./infinity_2b_reg.pth" --vae_t
 
 Where the model paths need to be update with the paths where the respective models are saved and the --jsonl_filepath leads to a json, which contains the prompts used for image generation. The delta and sequence length (watermark_context_width) can be adapted if wished.  
 
+An additional inference notebook can be found in inference/infer_infinity.ipynb
 
-## Instella IAR
+## Conda
 
+We use Conda as dependency management. You can install the environment via, e.g., 
 
+```
+conda env create -f Infinity/environment.yml
+```
 
-## BiGR
+## License
 
-
-
+The code is licensed under an MIT license. It relies on code and models from other repositories. See the next Acknowledgements section for the licenses of those dependencies.
 
 ## Acknowledgements
 
