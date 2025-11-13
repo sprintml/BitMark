@@ -52,6 +52,20 @@ We use Conda as dependency management. You can install the environment via, e.g.
 ```
 conda env create -f Infinity/environment.yml
 ```
+## Cite our work
+
+If you find our work useful, please cite our paper:
+```bibtex
+@inproceedings{
+  kerner2025bitmark,
+  title={BitMark: Watermarking Bitwise Autoregressive Image Generative Models},
+  author={Louis Kerner and Michel Meintz and Bihe Zhao and Franziska Boenisch and Adam Dziedzic},
+  booktitle={The Thirty-ninth Annual Conference on Neural Information Processing Systems},
+  year={2025},
+  url={https://openreview.net/forum?id=VSir0FzFnP}
+}
+```
+
 
 ## License
 
