@@ -1,15 +1,32 @@
 #!/bin/bash
 
 architecture=infinity # infinity, instella_iar
+
+
+# --------- MODEL BASE PATHS ---------
+INFINITY_BASE_PATH="./weights/Infinity"
+BIGR_BASE_PATH="./weights/BiGR/pretrained_models"
+INSTELLA_CONFIG_PATH="./weights/Instella-T2I/configs/ar_config.py"
+INSTELLA_CKPT_PATH="./weights/Instella-T2I/checkpoints"
+
+# Activate uv environment (assumes .venv, change if needed)
+if [ -d ".venv" ]; then
+    source .venv/bin/activate
+else
+    uv venv .venv
+    source .venv/bin/activate
+    uv sync
+fi
+
+# NOTE: BiGR and Instella currently not implemented with uv, use conda instead.
+
 case "$architecture" in
     "infinity")
-        conda activate inf_water
-        
         # INFINITY ARGUMENTS
         infinity2b=1
         if [ $infinity2b -eq 1 ]; then
-            vae_path='/path/infinity/infinity_vae_d32reg.pth'
-            model_path='/path/infinity/infinity_2b_reg.pth'
+            vae_path="$INFINITY_BASE_PATH/infinity_vae_d32reg.pth"
+            model_path="$INFINITY_BASE_PATH/infinity_2b_reg.pth"
             checkpoint_type='torch'
             vae_type=32
             model='infinity_2b'
@@ -18,9 +35,9 @@ case "$architecture" in
         else
             model='infinity_8b'
             checkpoint_type='torch_shard'
-            model_path='/path/infinity/infinity_8b_weights'  # 8.4GB
+            model_path="$INFINITY_BASE_PATH/infinity_8b_weights"  # 8.4GB
             vae_type=14
-            vae_path='/path/infinity/infinity_vae_d56_f8_14_patchify.pth'
+            vae_path="$INFINITY_BASE_PATH/infinity_vae_d56_f8_14_patchify.pth"
             apply_spatial_patchify=1
             batch_size=1
         fi
@@ -35,12 +52,10 @@ case "$architecture" in
 
         ;;
     "instella_iar")
-        conda activate instella_new
-        config='./Instella-T2I/configs/ar_config.py'
-        ckpt_path='./Instella-T2I/checkpoints'
+        config="$INSTELLA_CONFIG_PATH"
+        ckpt_path="$INSTELLA_CKPT_PATH"
         ;;
     "big_r")
-        conda activate BiGR
         image_size=512 # 256
         if [ $image_size -eq 256 ]; then
             image_size=256
@@ -50,9 +65,9 @@ case "$architecture" in
             ckpt='a'
         else
             seq_len=1024 # 256
-            ckpt_bae='/path/BiGR/pretrained_models/binaryae_ema_720000.th' # Path to the BAE checkpoint
+            ckpt_bae="$BIGR_BASE_PATH/binaryae_ema_720000.th" # Path to the BAE checkpoint
             model='BiGR-L-512' # Model name
-            ckpt='/path/BiGR/pretrained_models/bigr_L_d32.pt' # Path to the model checkpoint
+            ckpt="$BIGR_BASE_PATH/bigr_L_d32.pt" # Path to the model checkpoint
 
         fi
         num_sample_iter=10 # Unmasking steps
@@ -67,7 +82,6 @@ case "$architecture" in
         ;;
 esac
 echo USER: $USER
-which conda
 which python
 
 

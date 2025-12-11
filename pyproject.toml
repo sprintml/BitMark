@@ -34,6 +34,8 @@ dependencies = [
     'typed-argument-parser==1.10.1',
     'typer==0.15.2',
     'tqdm',
+    "jupyter>=1.1.1",
+    "ipykernel>=7.1.0",
 ]
 requires-python = "~=3.11.0"
 

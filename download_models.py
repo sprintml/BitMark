@@ -7,7 +7,12 @@ from huggingface_hub.errors import EntryNotFoundError, RepositoryNotFoundError
 MODEL_CONFIG: dict[str, dict[str, object]] = {
     "infinity": {
         "repo": "FoundationVision/Infinity",
-        "files": ["infinity_2b_reg.pth", "infinity_vae_d32reg.pth"],
+        "files": [
+            "infinity_2b_reg.pth",
+            "infinity_vae_d32reg.pth",
+            "infinity_8b_weights",  # Infinity 8b model
+            "infinity_vae_d56_f8_14_patchify.pth"
+        ],
         "subpath": Path("Infinity"),
     },
     "bigr": {
@@ -33,6 +38,7 @@ def parse_args() -> argparse.Namespace:
         "--output-dir",
         type=Path,
         required=True,
+        default=Path("./weights"),
         help="Root directory where checkpoints will be saved.",
     )
 
