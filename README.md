@@ -47,16 +47,13 @@ uv sync
 
 ### Running the model
 
-
-If you want to run the Jupyter notebook starting script (recommended), specify `bitmark` as the environment in `./scripts/infer_infinity.ipynb`.
+If you want to run the Jupyter notebook starter (recommended), specify `bitmark` as environment in `./scripts/infer_infinity.ipynb`.
 
 To download the required model weights, run:
 
 ```bash
-uv run download_models.py
+uv run download_models.py --output-dir './weights'
 ```
-
-This will save the weights in `./weights`.
 
 Otherwise, the file tools/comprehensive_infer.py offers a way to run the Infinity model and watermark images using our BitMark. The file can be executed by calling: 
 
