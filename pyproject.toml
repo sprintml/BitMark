@@ -1,0 +1,44 @@
+[project]
+name = "bitmark"
+version = "0.0.1"
+dependencies = [
+    'torch>=2.5.1',
+    'torchvision>=0.20',
+    'flash-attn>=2.7.0',
+    'arxiv-latex-cleaner',
+    'color-matcher',
+    'colorama',
+    'controlnet-aux==0.0.10',
+    'decord==0.6.0',
+    'easydict==1.13',
+    'setuptools',
+    'psutil',
+    'packaging',
+    'ninja',
+    'glob2==0.7',
+    'gputil==1.4.0',
+    'image-reward==1.5',
+    'img2dataset==1.45.0',
+    'kornia==0.8.0',
+    'nltk==3.9.1',
+    'normalizer==0.2.1',
+    'onnxruntime-gpu',
+    'open-clip-torch==2.31.0',
+    'openai==0.28.1',
+    'opencv-python==4.11.0.86',
+    'pytorch-fid==0.3.0',
+    'scikit-learn==1.6.1',
+    'seaborn==0.13.2',
+    'torch-fidelity==0.3.0',
+    'trustmark==0.8.0',
+    'typed-argument-parser==1.10.1',
+    'typer==0.15.2',
+    'tqdm',
+    "jupyter>=1.1.1",
+    "ipykernel>=7.1.0",
+]
+requires-python = "~=3.11.0"
+
+[tool.uv]
+package = false
+no-build-isolation-package = ["flash-attn"]

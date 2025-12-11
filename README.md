@@ -26,32 +26,47 @@ The robustness evaluation is in tools/robustness_test.py and to run it, it requi
 Our novel BitFlipper attack is applied by running flipper.py
 
 
-
 ## Infinity
 
 Infinity generates in a per scale fashion, where each scale can be understood as corresponding to a different resolution.
 
+
+### uv setup
+
+Install uv:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Install dependencies in the root folder of this project:
+
+```bash
+uv sync
+```
+
 ### Running the model
 
 
-The file tools/comprehensive_infer.py offers a way to run the Infinity model and watermark images using our BitMark. The file can be executed by calling: 
+If you want to run the Jupyter notebook starting script (recommended), specify `bitmark` as the environment in `./scripts/infer_infinity.ipynb`.
+
+To download the required model weights, run:
+
+```bash
+uv run download_models.py
+```
+
+This will save the weights in `./weights`.
+
+Otherwise, the file tools/comprehensive_infer.py offers a way to run the Infinity model and watermark images using our BitMark. The file can be executed by calling: 
 
 ```
-python tools/comprehensive_infer.py --model_path "./infinity_2b_reg.pth" --vae_type 32 --vae_path "infinity_vae_d32_reg.pth" --add_lvl_embeding_only_first_block 1 --model_type "infinity_2b" --seed 0 --watermark_scales 2 --watermark_delta 2
---watermark_context_width 2 --out_dir "./" --jsonl_filepath = "captions.json"
+uv run tools/comprehensive_infer.py --model_path "./weights/Infinity/infinity_2b_reg.pth" --vae_type 32 --vae_path "./weights/Infinity/infinity_2b_reg.pth" --add_lvl_embeding_only_first_block 1 --model_type "infinity_2b" --seed 0 --watermark_scales 2 --watermark_delta 2 --watermark_context_width 2 --out_dir "./" --jsonl_filepath = "captions.json"
 ```
 
-Where the model paths need to be update with the paths where the respective models are saved and the --jsonl_filepath leads to a json, which contains the prompts used for image generation. The delta and sequence length (watermark_context_width) can be adapted if wished.  
+where --jsonl_filepath leads to a json, which contains the prompts used for image generation. The delta and sequence length (watermark_context_width) can be adapted if wished.  
 
-An additional inference notebook can be found in inference/infer_infinity.ipynb
 
-## Conda
-
-We use Conda as dependency management. You can install the environment via, e.g., 
-
-```
-conda env create -f Infinity/environment.yml
-```
 ## Cite our work
 
 If you find our work useful, please cite our paper:
