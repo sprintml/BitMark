@@ -1,7 +1,7 @@
 
 # BitMark: Watermarking Bitwise Autoregressive Image Generative Models
 
-This is the official PyTorch code for the paper: 
+This is the official code for the paper: 
 
 [**BitMark: Watermarking Bitwise Autoregressive Image Generative Models**](https://neurips.cc/virtual/2025/poster/117685)
 
@@ -62,6 +62,40 @@ uv run tools/comprehensive_infer.py --model_path "./weights/Infinity/infinity_2b
 ```
 
 where --jsonl_filepath leads to a json, which contains the prompts used for image generation. The delta and sequence length (watermark_context_width) can be adapted if wished.  
+
+## Radioactivity
+
+For our radioactivity experiments, we generated 1,000 watermarked images from MS-COCO prompts, watermarking all scales with `delta = 2`.
+
+### Infinity
+
+We fine-tuned Infinity for 1 epoch at a learning rate of `1e-4` on the 1,000 watermarked images. The fine-tuning script is located at [./Infinity/finetune_for_radioactivity.sh](./Infinity/finetune_for_radioactivity.sh). An example of the JSONL format required by Infinity is provided in [./Infinity/finetune_jsonl_example](./Infinity/finetune_jsonl_example).
+
+> **Note:** When loading a fine-tuned model, the flag `args.enable_model_cache=1` must be set during inference.
+
+### Stable Diffusion 2.1
+
+We trained SD2.1 on the same dataset using the [Diffusers text-to-image training script](https://github.com/huggingface/diffusers/blob/main/examples/text_to_image/train_text_to_image.py) with the following hyperparameters:
+
+```
+--pretrained_model_name_or_path=stabilityai/stable-diffusion-2-1-base \
+  --train_data_dir=$dataset_path \
+  --use_ema \
+  --resolution=512 \
+  --center_crop \
+  --train_batch_size=4 \
+  --gradient_checkpointing \
+  --num_train_epochs=5 \
+  --mixed_precision="fp16" \
+  --learning_rate=1e-04 \
+  --enable_xformers_memory_efficient_attention \
+  --lr_scheduler="constant" \
+  --lr_warmup_steps=0 \
+  --checkpointing_steps 1000000 \
+  --seed 1 \
+```
+
+> **Note:** SD2.1 is apparently not anymore supported by huggingface. At the current time, the following model should still be supported: Manojb/stable-diffusion-2-1-base  
 
 
 ## Cite our work
