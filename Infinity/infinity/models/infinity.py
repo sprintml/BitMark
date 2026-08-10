@@ -622,8 +622,18 @@ class Infinity(nn.Module):
                                     if n < watermark.context_width:
                                         processed_logits = logits_BlV[:, bit_order[t_n], :]
                                     else:
-                                        index_tensor = idx_Bld[:,bit_order[t_n-1]]
-                                        
+                                        # Context is the last context_width-1 generated bits of this
+                                        # token, packed MSB-first. Passing only bit n-1 (as this used
+                                        # to) left-pads the prefix with zeros, so for context_width>2
+                                        # the lookup table is only ever reached at rows whose prefix
+                                        # begins with 0 and the scheme degenerates to context_width=2.
+                                        prefix_width = max(watermark.context_width - 1, 1)
+                                        window = torch.stack(
+                                            [idx_Bld[:, bit_order[t_n-k]] for k in range(prefix_width, 0, -1)],
+                                            dim=-1,
+                                        )
+                                        index_tensor = watermark.logits_processor.context_index(window)
+
                                         processed_logits = watermark.logits_processor(index_tensor, logits_BlV[:, bit_order[t_n] ,:])
                                     bit_n_of_tokens= sample_with_top_k_top_p_also_inplace_modifying_logits_(processed_logits, rng=rng, top_k=top_k, top_p=top_p, num_samples=1)[:, :, 0] 
                                     idx_Bld[:, bit_order[t_n]] = bit_n_of_tokens
