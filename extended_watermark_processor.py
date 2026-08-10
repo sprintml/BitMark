@@ -202,6 +202,23 @@ class WatermarkLookupProcessor(WatermarkLogitsProcessor, LogitsProcessor):
         
         return lookup_tensor
 
+    def context_index(self, previous_bits: torch.Tensor) -> torch.Tensor:
+        """Pack the last context_width-1 generated bits into a lookup_greenset row index.
+        `previous_bits` has shape [..., context_width-1] and is ordered oldest-first,
+        i.e. (b_{j-n+1}, ..., b_{j-1}) for the bit b_j about to be sampled.
+        _init_lookup_set reads the prefix off the low context_width-1 bits of the row
+        index, so packing the window MSB-first indexes it directly. Handing this
+        function a narrower window (e.g. only b_{j-1}) silently left-pads the prefix
+        with zeros and makes every prefix beginning with 1 unreachable.
+        """
+        prefix_width = self.context_width - 1
+        if prefix_width < 1:  # context_width == 1: the table ignores the context entirely
+            return torch.zeros(previous_bits.shape[:-1], dtype=torch.long, device=previous_bits.device)
+        assert previous_bits.shape[-1] == prefix_width, (
+            f"context must be the last {prefix_width} bits, got width {previous_bits.shape[-1]}"
+        )
+        return (previous_bits * self.powers_of_two[-prefix_width:]).sum(dim=-1)
+
     def compute_bias_sets(self, bitstrings):
         from collections import defaultdict
 
